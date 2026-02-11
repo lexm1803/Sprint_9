@@ -10,7 +10,7 @@ services:
     volumes: 
       - "./selenoid/browsers.json:/etc/browsers.json:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
-    command: ["-conf", "/etc/browser.json", "-container-network", "selenoid_net"]
+    command: ["-conf", "/etc/browsers.json", "-container-network", "selenoid_net"]
     
   selenoid-ui:
     image: "aerokube/selenoid:latest"
