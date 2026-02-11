@@ -22,9 +22,11 @@ class TestCreateRecipe:
             create.uploading_defolt_image()
             create.click_creating_recipe_button()
             recipes_page.open()
-            recipes_page.refresh_page()
             recipes_page.loading_page()
+            recipes_page.refresh_page()
+            title = recipes_page.get_card_by_title(data["title"])
             
         with allure.step('Проверка отображения созданного рецепта на странице рецетов'):
             assert recipes_page.is_title_visible(data["title"])
+            assert title.text == data["title"]
             
