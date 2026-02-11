@@ -1,4 +1,5 @@
 from allure import step
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from pages.base_page import BasePage
 from utils.url_bilder import UrlBilder
@@ -47,14 +48,6 @@ class RecipesPage(BasePage):
             raise ValueError('Список элементов пуст')
         return elements
     
-    @step('Поиск по заголовку {title} в карточках рецептов')
-    def get_card_by_title(self, title):
-        elements = self.get_list_card()
-        for element in elements:
-            if element.text.strip() == title:
-                return element
-        raise ValueError(f'Заголовок {title} в списке карточек не найден')
-
     @step('Поиск заголовка {title} в карточках рецептов')
     def is_title_visible(self, title):
         try:
@@ -63,3 +56,39 @@ class RecipesPage(BasePage):
         except ValueError:
             return False
         
+    """ @step('Поиск по заголовку {title} в карточках рецептов')
+    def get_card_by_title(self, title):
+        elements = self.get_list_card()
+        for element in elements:
+            if element.text.strip() == title:
+                return element
+        raise ValueError(f'Заголовок {title} в списке карточек не найден') """
+        
+    @step('Поиск по заголовку "{title}" карточки в списке карточек рецептов')
+    def get_card_by_title(self, title):
+        # Ждём, пока хотя бы один элемент появится
+        self.wait.until(
+            EC.presence_of_element_located(RecipesPageLocators.CARD_TITLE_LIST)
+        )
+
+        # Ждём, пока ЛЮБОЙ из элементов получит нужный текст
+        try:
+            self.wait.until(
+                lambda _: any(
+                    title == el.text.strip()
+                    for el in self.find_elements(RecipesPageLocators.CARD_TITLE_LIST)
+                    if el.text.strip()  # игнорируем пустые
+                )
+            )
+        except TimeoutException:
+            # Отладка
+            all_texts = [el.text for el in self.find_elements(RecipesPageLocators.CARD_TITLE_LIST)]
+            print(f"Все тексты на странице: {all_texts}")
+            raise ValueError(f'Заголовок "{title}" не найден. Доступные: {all_texts}')
+
+        # Теперь ищем и возвращаем
+        for el in self.find_elements(RecipesPageLocators.CARD_TITLE_LIST):
+            if el.text.strip() == title:
+                return el
+
+        raise RuntimeError("Этого не должно быть")
