@@ -1,15 +1,15 @@
 name: Sprint_9
-on: 
-  push: 
-    branches: 
-      develop
+on:
+  push:
+    branches:
+      dev
 jobs:
   run-selenoid-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository code
+      - name: Checkout repository code
         uses: actions/checkout@v3
-      - name: pull selenoid image
+      - name: Pull selenoid image
         run: docker pull selenoid/chrome:128.0
-      - name: run tests in docker
+      - name: Run tests in docker
         run: docker compose up --build --exit-code-from test_docker
