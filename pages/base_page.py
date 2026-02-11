@@ -53,3 +53,15 @@ class BasePage:
     def wait_to_text_to_be_present(self, locator, text):
         self.wait.until(EC.text_to_be_present_in_element(locator, text))
             
+    def find_element_by_text(self, locator, text):
+        try:
+            self.wait.until(lambda _: any(
+                    text == el.text.strip()
+                    for el in self.find_elements(locator)
+                    if el.text.strip()
+                ))
+        
+        except TimeoutException:
+            all_texts = [el.text for el in self.find_elements(locator)]
+            print(f"Все тексты на странице: {all_texts}")
+            raise ValueError(f'Заголовок "{text}" не найден. Доступные: {all_texts}')
