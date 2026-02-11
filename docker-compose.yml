@@ -1,4 +1,4 @@
-servises:
+services:
 
   selenoid:
     image: "aerokube/selenoid"
