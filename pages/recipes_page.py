@@ -1,5 +1,4 @@
 from allure import step
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from pages.base_page import BasePage
 from utils.url_bilder import UrlBilder
