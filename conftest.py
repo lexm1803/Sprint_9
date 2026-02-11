@@ -1,4 +1,5 @@
 import pytest
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -51,8 +52,9 @@ def driver():
         raise RuntimeError('Этого не должно было произойти. (Проверь файл config.py)')
 
     if SELENIUM_MODE == 'remote':
+        selenoid_uri = os.getenv("SELENOID_URI", "http://selenoid:4444/wd/hub")
         driver = webdriver.Remote(
-            command_executor = 'http://localhost:4444/wd/hub',
+            command_executor = selenoid_uri,
             options = options,
         )
     else:
